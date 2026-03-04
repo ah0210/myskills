@@ -1,0 +1,10 @@
+# 虚拟环境配置
+
+# Python 版本要求
+python_requires = ">=3.8"
+
+# 虚拟环境名称
+venv_name = ".venv"
+
+# 虚拟环境路径
+venv_path = "./.venv"

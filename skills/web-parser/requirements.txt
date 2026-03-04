@@ -1,0 +1,8 @@
+# Jina Reader + Crawl4AI 双引擎网页解析器依赖
+
+# 核心依赖
+crawl4ai>=0.3.0
+requests>=2.31.0
+
+# 可选依赖
+# playwright>=1.40.0  # Crawl4AI 的浏览器驱动，首次使用会自动安装
