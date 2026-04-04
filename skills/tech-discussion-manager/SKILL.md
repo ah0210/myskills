@@ -1,8 +1,8 @@
 ---
 name: 技术讨论管理和沉淀
 slug: tech-discussion-manager
-version: "0.5.0"
-description: 技术讨论管理和沉淀技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持 Git 版本管理（可选），支持多智能体协同使用。
+version: "0.5.2"
+description: 技术讨论管理和沉淀技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持 Git 版本管理（可选）。Use when the user wants to discuss technical topics, record decisions, create architecture documents, or start development planning. Triggers on requests like "我们讨论一下", "技术方案评审", "需求评审", "架构设计讨论", "生成决策文档", "生成架构文档", "开始开发", "列出讨论", or any task requiring technical discussion management or knowledge documentation.
 metadata:
   {
     "openclaw":
@@ -32,6 +32,22 @@ metadata:
 ---
 
 # 技术讨论管理和沉淀
+
+## 快速参考
+
+### 触发条件
+| 用户请求 | 触发操作 |
+|----------|----------|
+| "我们讨论一下" | 创建讨论记录 |
+| "技术方案评审" | 创建讨论记录 |
+| "需求评审" | 创建讨论记录 |
+| "架构设计讨论" | 创建讨论记录 |
+| "生成决策文档" | 生成决策文档 |
+| "生成架构文档" | 生成架构文档 |
+| "开始开发" | 启动开发流程 |
+| "列出讨论" | 显示讨论列表 |
+| "记录版本" | 记录版本（需 Git） |
+| "讨论结束" | 结束讨论流程 |
 
 ## 功能概述
 标准化管理技术讨论和创意沉淀的技能，帮助自动创建规范的目录结构、讨论记录模板，确保技术知识完整留存。支持 Git 版本管理作为可选增强功能。
