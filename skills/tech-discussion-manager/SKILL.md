@@ -1,14 +1,15 @@
 ---
-name: tech-discussion-manager
-version: "0.1.1"
-description: 技术讨论管理技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持多智能体协同使用。
+name: 技术讨论管理和沉淀
+slug: tech-discussion-manager
+version: "0.4.0"
+description: 技术讨论管理和沉淀技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持 Git 版本管理，支持多智能体协同使用。
 metadata:
   {
     "openclaw":
       {
         "requires":
           {
-            "bins": [],
+            "bins": ["git"],
             "env": ["OPENCLAW_WORKSPACE"],
           },
         "install":
@@ -16,13 +17,13 @@ metadata:
             {
               "id": "setup-directories",
               "kind": "shell",
-              "script": "mkdir -p \"$OPENCLAW_WORKSPACE/memory/tech-discussions/archive\" \"$OPENCLAW_WORKSPACE/code-output\" \"$OPENCLAW_WORKSPACE/docs/decisions\" \"$OPENCLAW_WORKSPACE/docs/architecture\"",
+              "script": "mkdir -p \"$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/discussions\" \"$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/decisions\" \"$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/architecture\" \"$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/dev-plans\" \"$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/code-output\"",
               "label": "创建标准目录结构",
             },
             {
               "id": "install-templates",
               "kind": "shell",
-              "script": "cp -n ./templates/*.md \"$OPENCLAW_WORKSPACE/memory/tech-discussions/\" 2>/dev/null || true",
+              "script": "cp -n ./templates/*.md \"./$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/\" 2>/dev/null || true",
               "label": "安装模板文件",
             },
           ],
@@ -30,10 +31,13 @@ metadata:
   }
 ---
 
-# tech-discussion-manager 技术讨论管理技能
+# 技术讨论管理和沉淀
+
+## 前置要求
+⚠️ **重要**：本地必须安装 Git 才能使用本技能
 
 ## 功能概述
-标准化管理技术讨论和创意沉淀的技能，帮助自动创建规范的目录结构、讨论记录模板，确保技术知识完整留存。
+标准化管理技术讨论和创意沉淀的技能，帮助自动创建规范的目录结构、讨论记录模板，支持 Git 版本管理，确保技术知识完整留存。
 
 ## 核心功能
 - 📝 标准化技术讨论记录模板
@@ -42,6 +46,10 @@ metadata:
 - 📦 讨论归档机制
 - 🤝 多智能体协同支持
 - 🔍 便于后续检索和回顾
+- 🌿 Git 版本管理（文档和代码）
+- 📋 决策文档和架构文档生成
+- 📅 开发规划生成（含甘特图）
+- 🏷️ 版本记录和标签管理
 
 ## 智能体使用规范
 当用户发起技术讨论时，智能体**推荐**按照以下流程执行：
@@ -60,8 +68,8 @@ metadata:
 自动执行以下操作：
 ```markdown
 我已经帮你创建了技术讨论记录：
-📝 讨论文件：`memory/tech-discussions/YYYY-MM-DD-主题.md`
-📂 代码目录：`code-output/[主题]/`
+📝 讨论文件：`projects/tech-discussion-manager/docs/discussions/YYYY-MM-DD-主题.md`
+📂 代码目录：`projects/tech-discussion-manager/code-output/[主题]/`
 
 我们可以开始讨论了，我会实时记录要点和决策。
 ```
@@ -91,37 +99,116 @@ metadata:
 - [ ] 任务2：xxx，负责人：xxx，截止时间：xxx
 
 ## 相关产出
-- 代码输出：`code-output/[主题]/`
-- 文档：`docs/`
+- 代码输出：`projects/tech-discussion-manager/code-output/[主题]/`
+- 文档：`projects/tech-discussion-manager/docs/`
 - 参考链接：
 ```
 
-### 3. 讨论结束流程
+### 3. 列出讨论列表
+当用户提到以下关键词时，列出所有讨论：
+- "列出讨论"
+- "讨论列表"
+- "查看讨论"
+
+输出格式：
+```markdown
+📋 技术讨论列表
+
+## 已完成
+- [2026-04-04] GEO工具架构设计 ✅
+- [2026-04-03] 数据库选型讨论 ✅
+
+## 进行中
+- [2026-04-04] API接口设计 🔄
+```
+
+### 4. 生成决策文档
+当用户提到以下关键词时，生成决策文档：
+- "生成决策"
+- "决策文档"
+
+### 5. 生成架构文档
+当用户提到以下关键词时，生成架构文档：
+- "生成架构"
+- "架构文档"
+
+### 6. 开始开发流程
+当用户提到以下关键词时，开始开发流程：
+- "开始开发"
+- "启动开发"
+
+流程：
+1. 列出已完成的讨论
+2. 用户选择一个讨论
+3. 确认决策文档
+4. 确认架构文档
+5. 生成开发规划文档
+6. 创建代码目录
+7. 初始化 Git 仓库
+8. Git 提交所有变更
+
+### 7. 开发规划文档
+开发规划包含：
+- 项目信息
+- 技术栈
+- 开发阶段划分
+- 甘特图（Mermaid）
+- 里程碑
+- 任务清单
+
+### 8. 记录版本
+当用户提到以下关键词时，记录版本：
+- "记录版本"
+- "版本更新"
+
+流程：
+1. 询问版本号（v1.0.0, v1.0.1 等）
+2. 询问版本说明
+3. Git add 所有变更
+4. Git commit
+5. Git tag 打版本标签
+
+### 9. 确认开发完成
+当用户提到以下关键词时，确认开发完成：
+- "开发完成"
+- "确认完成"
+
+### 10. 讨论结束流程
 当用户表示讨论结束时，可以执行：
 1. 整理讨论内容，提炼核心结论
 2. 更新讨论状态为"已完成"
 3. 如有需要，将重要结论同步到 `MEMORY.md`
 4. 如需归档，移动到 `archive/` 目录
 5. 更新 `index.md` 索引
+6. Git 提交变更
 
-### 4. 目录结构规范
+### 11. 目录结构规范
 ```
 $OPENCLAW_WORKSPACE/
-├── memory/
-│   └── tech-discussions/
-│       ├── archive/                # 归档历史讨论
-│       ├── TEMPLATE.md             # 讨论模板
-│       ├── index.md                # 讨论索引
-│       └── YYYY-MM-DD-主题.md       # 具体讨论记录
-├── code-output/                    # 代码输出目录
-│   └── [讨论主题]/                  # 每个讨论对应独立代码目录
-└── docs/
-    ├── decisions/                  # 正式决策文档
-    └── architecture/               # 架构设计文档
+└── projects/
+    └── tech-discussion-manager/
+        ├── .git/                    # Git 仓库
+        ├── .gitignore                # Git 忽略文件
+        ├── docs/                     # 所有文档
+        │   ├── discussions/          # 讨论记录
+        │   │   └── YYYY-MM-DD-主题.md
+        │   ├── decisions/            # 决策文档
+        │   │   └── [项目名]-decision.md
+        │   ├── architecture/         # 架构文档
+        │   │   └── [项目名]-architecture.md
+        │   ├── dev-plans/            # 开发规划
+        │   │   └── [项目名]-plan.md
+        │   └── index.md              # 讨论索引
+        └── code-output/              # 代码输出
+            └── [项目名]/
+                ├── .git/             # 独立 Git 仓库（可选）
+                ├── .gitignore
+                ├── README.md
+                └── [代码文件]
 ```
 
-### 5. 讨论索引维护
-在 `memory/tech-discussions/index.md` 中维护所有讨论的索引：
+### 12. 讨论索引维护
+在 `projects/tech-discussion-manager/docs/index.md` 中维护所有讨论的索引：
 
 ```markdown
 # 技术讨论索引
@@ -140,29 +227,95 @@ $OPENCLAW_WORKSPACE/
 ## 记忆系统集成
 本技能作为**可选工具**提供：
 - 推荐使用本技能管理技术讨论（但不强制）
-- 讨论记录默认保存到 `memory/tech-discussions/`（可自定义位置）
+- 讨论记录默认保存到 `projects/tech-discussion-manager/docs/`（可自定义位置）
 - 也可以直接在当前对话中记录，不强制使用技能
 - 重要结论建议同步到 `MEMORY.md` 长期保存
 - 所有讨论结构化留存，便于后续检索
+- 使用 Git 管理所有文档和代码的版本
+
+## Git 使用说明
+
+### 初始化 Git 仓库
+首次使用时，自动执行：
+```bash
+git init
+git add .
+git commit -m "初始化 tech-discussion-manager 项目"
+```
+
+### 自动提交
+每次生成或修改文档时，自动提交：
+- 新建讨论：`新增讨论: [主题]`
+- 更新决策：`更新决策文档: [项目名] v1.0 -> v1.1`
+- 生成规划：`新增开发规划: [项目名]`
+
+### 版本标签
+使用 Git tag 标记版本：
+```bash
+git tag -a v1.0.0 -m "版本 v1.0.0"
+```
+
+### 远程仓库（可选）
+用户可以配置远程仓库：
+```bash
+git remote add origin <仓库URL>
+git push -u origin main
+```
 
 ## 与其他技能的关系
 - 本技能专注于**讨论记录和知识沉淀**
 - 代码产出可以配合其他技能（如 code generator）使用
 - 决策文档可以配合文档类技能使用
+- 使用 Git 统一管理版本，与其他 Git 工具兼容
 
 ## 用户使用示例
 ```
 用户：我们讨论一下GEO工具的架构设计
 智能体：✅ 已创建技术讨论记录：
-📝 讨论文件：memory/tech-discussions/2026-04-02-geo工具架构设计.md
-📂 代码目录：code-output/geo工具架构设计/
+📝 讨论文件：projects/tech-discussion-manager/docs/discussions/2026-04-02-geo工具架构设计.md
+📂 代码目录：projects/tech-discussion-manager/code-output/geo工具架构设计/
 请开始讨论，我会实时记录要点。
 
 ---
 
 用户：讨论结束
 智能体：好的，已整理讨论结论：
-📝 讨论文件：memory/tech-discussions/2026-04-02-geo工具架构设计.md
-📝 索引已更新：memory/tech-discussions/index.md
+📝 讨论文件：projects/tech-discussion-manager/docs/discussions/2026-04-02-geo工具架构设计.md
+📝 索引已更新：projects/tech-discussion-manager/docs/index.md
 💡 核心决策已同步到 MEMORY.md
+✅ Git 已提交
+
+---
+
+用户：开始开发
+智能体：📋 已完成的讨论列表：
+1. [2026-04-02] GEO工具架构设计
+2. [2026-04-01] 数据库选型
+
+请选择要开发的讨论（输入序号）：
+
+用户：1
+智能体：✅ 已选择讨论：GEO工具架构设计
+📝 生成决策文档...
+📝 生成架构文档...
+📝 生成开发规划...
+📂 创建代码目录...
+🌿 初始化 Git 仓库...
+✅ 所有变更已提交到 Git
+
+开发规划已生成：projects/tech-discussion-manager/docs/dev-plans/geo工具-plan.md
+代码目录：projects/tech-discussion-manager/code-output/geo工具/
+
+---
+
+用户：记录版本
+智能体：请输入版本号（例如 v1.0.0）：
+
+用户：v1.0.0
+智能体：请输入版本说明：
+
+用户：初始版本发布
+智能体：✅ 版本 v1.0.0 已记录
+🌿 Git commit: v1.0.0 - 初始版本发布
+🏷️ Git tag: v1.0.0
 ```
