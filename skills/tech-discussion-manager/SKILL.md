@@ -1,15 +1,15 @@
 ---
 name: 技术讨论管理和沉淀
 slug: tech-discussion-manager
-version: "0.4.0"
-description: 技术讨论管理和沉淀技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持 Git 版本管理，支持多智能体协同使用。
+version: "0.5.0"
+description: 技术讨论管理和沉淀技能，自动创建结构化的讨论记录、代码输出目录，沉淀技术决策和创意，支持 Git 版本管理（可选），支持多智能体协同使用。
 metadata:
   {
     "openclaw":
       {
         "requires":
           {
-            "bins": ["git"],
+            "bins": [],
             "env": ["OPENCLAW_WORKSPACE"],
           },
         "install":
@@ -33,11 +33,8 @@ metadata:
 
 # 技术讨论管理和沉淀
 
-## 前置要求
-⚠️ **重要**：本地必须安装 Git 才能使用本技能
-
 ## 功能概述
-标准化管理技术讨论和创意沉淀的技能，帮助自动创建规范的目录结构、讨论记录模板，支持 Git 版本管理，确保技术知识完整留存。
+标准化管理技术讨论和创意沉淀的技能，帮助自动创建规范的目录结构、讨论记录模板，确保技术知识完整留存。支持 Git 版本管理作为可选增强功能。
 
 ## 核心功能
 - 📝 标准化技术讨论记录模板
@@ -46,10 +43,15 @@ metadata:
 - 📦 讨论归档机制
 - 🤝 多智能体协同支持
 - 🔍 便于后续检索和回顾
-- 🌿 Git 版本管理（文档和代码）
+- 🌿 Git 版本管理（可选增强）
 - 📋 决策文档和架构文档生成
 - 📅 开发规划生成（含甘特图）
-- 🏷️ 版本记录和标签管理
+- 🏷️ 版本记录和标签管理（需 Git）
+
+## Git 增强功能（可选）
+- 💡 **说明**：Git 是可选增强功能，不影响基础功能使用
+- ✅ **有 Git 时**：自动启用版本管理、自动提交、标签管理
+- ❌ **无 Git 时**：所有基础功能正常使用，仅跳过 Git 相关操作
 
 ## 智能体使用规范
 当用户发起技术讨论时，智能体**推荐**按照以下流程执行：
@@ -144,8 +146,8 @@ metadata:
 4. 确认架构文档
 5. 生成开发规划文档
 6. 创建代码目录
-7. 初始化 Git 仓库
-8. Git 提交所有变更
+7. （可选）初始化 Git 仓库
+8. （可选）Git 提交所有变更
 
 ### 7. 开发规划文档
 开发规划包含：
@@ -156,17 +158,20 @@ metadata:
 - 里程碑
 - 任务清单
 
-### 8. 记录版本
+### 8. 记录版本（需 Git）
 当用户提到以下关键词时，记录版本：
 - "记录版本"
 - "版本更新"
 
+**注意**：此功能需要 Git 支持。
+
 流程：
-1. 询问版本号（v1.0.0, v1.0.1 等）
-2. 询问版本说明
-3. Git add 所有变更
-4. Git commit
-5. Git tag 打版本标签
+1. 检查 Git 是否可用
+2. 询问版本号（v1.0.0, v1.0.1 等）
+3. 询问版本说明
+4. Git add 所有变更
+5. Git commit
+6. Git tag 打版本标签
 
 ### 9. 确认开发完成
 当用户提到以下关键词时，确认开发完成：
@@ -180,14 +185,14 @@ metadata:
 3. 如有需要，将重要结论同步到 `MEMORY.md`
 4. 如需归档，移动到 `archive/` 目录
 5. 更新 `index.md` 索引
-6. Git 提交变更
+6. （可选）Git 提交变更
 
 ### 11. 目录结构规范
 ```
 $OPENCLAW_WORKSPACE/
 └── projects/
     └── tech-discussion-manager/
-        ├── .git/                    # Git 仓库
+        ├── .git/                    # Git 仓库（可选）
         ├── .gitignore                # Git 忽略文件
         ├── docs/                     # 所有文档
         │   ├── discussions/          # 讨论记录
@@ -231,25 +236,30 @@ $OPENCLAW_WORKSPACE/
 - 也可以直接在当前对话中记录，不强制使用技能
 - 重要结论建议同步到 `MEMORY.md` 长期保存
 - 所有讨论结构化留存，便于后续检索
-- 使用 Git 管理所有文档和代码的版本
+- Git 版本管理为可选增强功能
 
-## Git 使用说明
+## Git 使用说明（可选）
 
-### 初始化 Git 仓库
-首次使用时，自动执行：
+### Git 可用性检查
+使用前先检查 Git 是否可用：
+- 可用：自动启用 Git 相关功能
+- 不可用：跳过 Git 操作，基础功能正常使用
+
+### 初始化 Git 仓库（可选）
+首次使用且 Git 可用时，可自动执行：
 ```bash
 git init
 git add .
 git commit -m "初始化 tech-discussion-manager 项目"
 ```
 
-### 自动提交
-每次生成或修改文档时，自动提交：
+### 自动提交（可选）
+Git 可用时，每次生成或修改文档时自动提交：
 - 新建讨论：`新增讨论: [主题]`
 - 更新决策：`更新决策文档: [项目名] v1.0 -> v1.1`
 - 生成规划：`新增开发规划: [项目名]`
 
-### 版本标签
+### 版本标签（可选，需 Git）
 使用 Git tag 标记版本：
 ```bash
 git tag -a v1.0.0 -m "版本 v1.0.0"
@@ -266,9 +276,11 @@ git push -u origin main
 - 本技能专注于**讨论记录和知识沉淀**
 - 代码产出可以配合其他技能（如 code generator）使用
 - 决策文档可以配合文档类技能使用
-- 使用 Git 统一管理版本，与其他 Git 工具兼容
+- Git 版本管理为可选增强，与其他 Git 工具兼容
 
 ## 用户使用示例
+
+### 基础模式（无 Git）
 ```
 用户：我们讨论一下GEO工具的架构设计
 智能体：✅ 已创建技术讨论记录：
@@ -283,7 +295,25 @@ git push -u origin main
 📝 讨论文件：projects/tech-discussion-manager/docs/discussions/2026-04-02-geo工具架构设计.md
 📝 索引已更新：projects/tech-discussion-manager/docs/index.md
 💡 核心决策已同步到 MEMORY.md
-✅ Git 已提交
+```
+
+### 增强模式（有 Git）
+```
+用户：我们讨论一下GEO工具的架构设计
+智能体：✅ 已创建技术讨论记录：
+📝 讨论文件：projects/tech-discussion-manager/docs/discussions/2026-04-02-geo工具架构设计.md
+📂 代码目录：projects/tech-discussion-manager/code-output/geo工具架构设计/
+🌿 Git 已提交：新增讨论: geo工具架构设计
+请开始讨论，我会实时记录要点。
+
+---
+
+用户：讨论结束
+智能体：好的，已整理讨论结论：
+📝 讨论文件：projects/tech-discussion-manager/docs/discussions/2026-04-02-geo工具架构设计.md
+📝 索引已更新：projects/tech-discussion-manager/docs/index.md
+💡 核心决策已同步到 MEMORY.md
+🌿 Git 已提交
 
 ---
 
@@ -319,3 +349,214 @@ git push -u origin main
 🌿 Git commit: v1.0.0 - 初始版本发布
 🏷️ Git tag: v1.0.0
 ```
+
+## 跨环境使用指南
+
+### 支持的环境
+- ✅ OpenClaw（原生支持）
+- ✅ 其他 AI 智能体平台
+- ✅ 本地 IDE（VS Code、PyCharm 等）
+- ✅ 命令行直接使用
+
+### 环境要求
+| 依赖 | 必需 | 说明 |
+|------|------|------|
+| OPENCLAW_WORKSPACE 环境变量 | ✅ 是 | 指定工作空间根目录 |
+| Bash（Linux/macOS）或 PowerShell（Windows） | ✅ 是 | 运行安装脚本 |
+| Git | ❌ 否 | 可选增强功能 |
+
+### 快速开始
+
+#### 方式 1：在 OpenClaw 中使用（推荐）
+无需额外配置，直接使用技能即可。
+
+#### 方式 2：使用安装脚本（推荐）
+1. **设置环境变量**
+   ```bash
+   # Linux/macOS
+   export OPENCLAW_WORKSPACE=/path/to/your/workspace
+   
+   # Windows PowerShell
+   $env:OPENCLAW_WORKSPACE = "C:\path\to\your\workspace"
+   ```
+
+2. **运行安装脚本**
+   ```bash
+   # Linux/macOS
+   bash install.sh
+   
+   # Windows PowerShell
+   .\install.ps1
+   ```
+
+3. **按照使用规范开始使用**
+
+#### 方式 3：手动安装
+如果无法运行脚本，请参考下文的"手动安装步骤"。
+
+---
+
+## 环境变量配置详解
+
+### OPENCLAW_WORKSPACE
+这是唯一必需的环境变量，指定你的工作空间根目录。
+
+#### Linux/macOS 配置
+```bash
+# 临时设置（当前终端有效）
+export OPENCLAW_WORKSPACE=/home/你的用户名/workspace
+
+# 永久设置（添加到 ~/.bashrc 或 ~/.zshrc）
+echo 'export OPENCLAW_WORKSPACE=/home/你的用户名/workspace' >> ~/.bashrc
+source ~/.bashrc
+```
+
+#### Windows PowerShell 配置
+```powershell
+# 临时设置（当前终端有效）
+$env:OPENCLAW_WORKSPACE = "C:\Users\你的用户名\workspace"
+
+# 永久设置（当前用户）
+[Environment]::SetEnvironmentVariable('OPENCLAW_WORKSPACE', 'C:\Users\你的用户名\workspace', 'User')
+```
+
+#### Windows CMD 配置
+```cmd
+# 临时设置（当前终端有效）
+set OPENCLAW_WORKSPACE=C:\Users\你的用户名\workspace
+
+# 永久设置（需要管理员权限）
+setx OPENCLAW_WORKSPACE "C:\Users\你的用户名\workspace"
+```
+
+#### 在 IDE 中配置
+
+##### VS Code
+创建或编辑 `.vscode/settings.json`：
+```json
+{
+  "terminal.integrated.env.linux": {
+    "OPENCLAW_WORKSPACE": "/home/你的用户名/workspace"
+  },
+  "terminal.integrated.env.osx": {
+    "OPENCLAW_WORKSPACE": "/Users/你的用户名/workspace"
+  },
+  "terminal.integrated.env.windows": {
+    "OPENCLAW_WORKSPACE": "C:\\Users\\你的用户名\\workspace"
+  }
+}
+```
+
+##### PyCharm
+1. 打开 `Run` → `Edit Configurations`
+2. 选择你的配置
+3. 在 `Environment variables` 中添加：
+   - Name: `OPENCLAW_WORKSPACE`
+   - Value: 你的工作空间路径
+
+---
+
+## 手动安装步骤
+
+如果无法运行安装脚本，可以按照以下步骤手动操作：
+
+### 1. 创建目录结构
+
+#### Linux/macOS
+```bash
+mkdir -p "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/discussions"
+mkdir -p "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/decisions"
+mkdir -p "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/architecture"
+mkdir -p "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/dev-plans"
+mkdir -p "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/code-output"
+```
+
+#### Windows PowerShell
+```powershell
+$workspace = $env:OPENCLAW_WORKSPACE
+New-Item -ItemType Directory -Path "$workspace\projects\tech-discussion-manager\docs\discussions" -Force
+New-Item -ItemType Directory -Path "$workspace\projects\tech-discussion-manager\docs\decisions" -Force
+New-Item -ItemType Directory -Path "$workspace\projects\tech-discussion-manager\docs\architecture" -Force
+New-Item -ItemType Directory -Path "$workspace\projects\tech-discussion-manager\docs\dev-plans" -Force
+New-Item -ItemType Directory -Path "$workspace\projects\tech-discussion-manager\code-output" -Force
+```
+
+### 2. 复制模板文件
+
+将技能包 `templates/` 目录下的所有文件复制到：
+```
+$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/docs/
+```
+
+### 3. （可选）初始化 Git 仓库
+
+```bash
+cd "$OPENCLAW_WORKSPACE/projects/tech-discussion-manager"
+git init
+git add .
+git commit -m "初始化 tech-discussion-manager 项目"
+```
+
+---
+
+## 安装脚本使用说明
+
+### install.sh（Linux/macOS）
+
+#### 功能特性
+- ✅ 自动检查环境变量
+- ✅ 彩色输出，清晰易读
+- ✅ 错误处理和友好提示
+- ✅ 不覆盖已存在的文件
+- ✅ 可选 Git 初始化
+
+#### 使用方法
+```bash
+# 基本使用
+bash install.sh
+```
+
+### install.ps1（Windows PowerShell）
+
+#### 功能特性
+- ✅ 自动检查环境变量
+- ✅ 彩色输出，清晰易读
+- ✅ 错误处理和友好提示
+- ✅ 不覆盖已存在的文件
+- ✅ 可选 Git 初始化
+- ✅ 支持 Windows 路径格式
+
+#### 使用方法
+```powershell
+# 基本使用
+.\install.ps1
+```
+
+#### 执行策略问题
+如果遇到执行策略限制：
+```powershell
+# 临时允许（当前终端有效）
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+# 然后运行脚本
+.\install.ps1
+```
+
+---
+
+## 常见问题
+
+### Q: 提示 "OPENCLAW_WORKSPACE 环境变量未设置"
+A: 请参考上方的"环境变量配置详解"章节进行设置。
+
+### Q: 权限被拒绝
+A: 确保你对工作空间目录有读写权限。
+
+### Q: Git 初始化失败
+A: Git 是可选功能，即使初始化失败，基础功能仍然可以使用。
+
+### Q: 可以在多个工作空间使用吗？
+A: 可以！每次切换工作空间时，只需更新 `OPENCLAW_WORKSPACE` 环境变量即可。
+
+### Q: 如何卸载？
+A: 直接删除 `$OPENCLAW_WORKSPACE/projects/tech-discussion-manager/` 目录即可。
