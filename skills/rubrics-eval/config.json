@@ -1,0 +1,22 @@
+{
+  "comment": "Rubrics Eval 配置文件 - 请根据实际环境修改模型名称",
+  
+  "被测模型映射": {
+    "rose": "ark-test/anonymous/rose",
+    "tulip": "ark-test/anonymous/tulip",
+    "bamboo": "ark-test/anonymous/bamboo",
+    "oak": "ark-test/anonymous/oak",
+    "elm": "ark-test/anonymous/elm"
+  },
+  
+  "打分模型": "ark-test/anonymous/yama",
+  
+  "默认被测模型": "elm",
+  
+  "评测设置": {
+    "随机抽题数量": 5,
+    "题目超时秒数": 120,
+    "启用缓存": true,
+    "启用高分压缩": true
+  }
+}

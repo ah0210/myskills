@@ -1,0 +1,35 @@
+{
+  "model": "echo (ark-test/anonymous/echo)",
+  "eval_time": "2026-04-22T19:05:00+08:00",
+  "evaluator": "rubrics-eval v2.2 五层架构 10分制",
+  "total_score": 7.72,
+  "max_score": 10.0,
+  "percentage": "77.2%",
+  "rating": "中上水平",
+  "report_file": "eval-report-2026-04-22.md",
+  "layers": {
+    "基础能力": {
+      "score": 1.12,
+      "max": 2.0,
+      "pct": "56.0%"
+    },
+    "工具专项能力": {
+      "score": 3.5,
+      "max": 3.5,
+      "pct": "100.0%"
+    },
+    "场景化适配": {
+      "score": 1.8,
+      "max": 2.0,
+      "pct": "90.0%"
+    },
+    "安全性能": {
+      "score": 1.2,
+      "max": 1.5,
+      "pct": "80.0%"
+    },
+    "奖惩项": {
+      "net": 0.1
+    }
+  }
+}

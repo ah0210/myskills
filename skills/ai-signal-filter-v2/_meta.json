@@ -1,0 +1,11 @@
+{
+  "slug": "ai-signal-filter",
+  "version": "2.0.0",
+  "name": "AI 信号筛选器",
+  "description": "每日 AI 新闻信号报告生成，三层质量门控筛选",
+  "ownerId": "kn7cxxvka9h917d10jkmacp1ys817rbt",
+  "publishedAt": 1777366083548,
+  "updatedAt": 1777570020000,
+  "tags": ["ai", "news", "signal", "daily"],
+  "runtime": "openclaw"
+}
