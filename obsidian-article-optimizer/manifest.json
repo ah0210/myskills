@@ -1,0 +1,11 @@
+{
+  "id": "obsidian-article-optimizer",
+  "name": "AI 文章优化助手",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "使用 AI 自动优化文章格式、SEO、GEO，支持 Ollama 本地模型",
+  "author": "大哥",
+  "authorUrl": "",
+  "fundingUrl": "",
+  "isDesktopOnly": false
+}
