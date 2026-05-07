@@ -1,4 +1,4 @@
-import { Notice, requestUrl, RequestUrlParam } from "obsidian";
+import { Notice, requestUrl, Platform } from "obsidian";
 import { PluginSettings } from "./settings";
 
 export interface ChatMessage {
@@ -19,63 +19,104 @@ export class AIService {
     this.settings = settings;
   }
 
-  /**
-   * 非流式请求
-   */
-  async chat(messages: ChatMessage[]): Promise<string> {
+  private buildHeaders(): Record<string, string> {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
     if (this.settings.apiKey) {
       headers["Authorization"] = `Bearer ${this.settings.apiKey}`;
     }
+    return headers;
+  }
 
-    const body = {
+  private buildBody(messages: ChatMessage[], stream: boolean): string {
+    return JSON.stringify({
       model: this.settings.modelName,
       messages,
-      stream: false,
-    };
+      stream,
+    });
+  }
+
+  /**
+   * 测试 AI 服务连接
+   */
+  async testConnection(): Promise<void> {
+    const headers = this.buildHeaders();
+    const body = this.buildBody(
+      [{ role: "user", content: "ping" }],
+      false
+    );
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
-      const response = await requestUrl({
-        url: this.settings.apiEndpoint,
+      const response = await fetch(this.settings.apiEndpoint, {
         method: "POST",
         headers,
-        body: JSON.stringify(body),
+        body,
+        signal: controller.signal,
       });
 
-      const data = response.json;
-      if (data?.choices?.[0]?.message?.content) {
-        return data.choices[0].message.content;
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
-      throw new Error("API 返回格式异常: " + JSON.stringify(data));
-    } catch (err: any) {
-      const msg = err?.message || String(err);
-      new Notice("AI 请求失败: " + msg, 5000);
-      throw err;
+
+      const data = await response.json();
+      if (!data?.choices?.[0]?.message?.content) {
+        throw new Error("API 返回格式异常");
+      }
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
   /**
-   * 流式请求（SSE）
+   * 流式请求（SSE），支持超时和重试
    */
   async chatStream(
     messages: ChatMessage[],
     callbacks: StreamCallbacks
   ): Promise<void> {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      Accept: "text/event-stream",
-    };
-    if (this.settings.apiKey) {
-      headers["Authorization"] = `Bearer ${this.settings.apiKey}`;
+    let lastError: Error | null = null;
+    const maxRetries = this.settings.maxRetries;
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      if (attempt > 0) {
+        await this.delay(1000 * attempt);
+      }
+
+      try {
+        await this.doChatStream(messages, callbacks);
+        return;
+      } catch (err: any) {
+        lastError = err;
+        if (attempt < maxRetries) {
+          new Notice(`AI 请求失败，正在重试 (${attempt + 1}/${maxRetries})...`);
+        }
+      }
     }
 
-    const body = {
-      model: this.settings.modelName,
-      messages,
-      stream: true,
+    callbacks.onError(lastError || new Error("未知错误"));
+    new Notice("AI 流式请求失败: " + (lastError?.message || "未知错误"), 5000);
+  }
+
+  private async doChatStream(
+    messages: ChatMessage[],
+    callbacks: StreamCallbacks
+  ): Promise<void> {
+    const headers: Record<string, string> = {
+      ...this.buildHeaders(),
+      Accept: "text/event-stream",
     };
+    const body = this.buildBody(messages, true);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      this.settings.requestTimeout
+    );
 
     let fullText = "";
 
@@ -83,7 +124,8 @@ export class AIService {
       const response = await fetch(this.settings.apiEndpoint, {
         method: "POST",
         headers,
-        body: JSON.stringify(body),
+        body,
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -130,12 +172,18 @@ export class AIService {
         }
       }
 
-      // 流结束但没收到 [DONE]
       callbacks.onDone(fullText);
     } catch (err: any) {
-      const msg = err?.message || String(err);
-      callbacks.onError(err);
-      new Notice("AI 流式请求失败: " + msg, 5000);
+      if (err?.name === "AbortError") {
+        throw new Error(`请求超时（${this.settings.requestTimeout / 1000}秒）`);
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeoutId);
     }
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

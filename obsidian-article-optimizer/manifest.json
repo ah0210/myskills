@@ -3,7 +3,7 @@
   "name": "AI 文章优化助手",
   "version": "1.0.0",
   "minAppVersion": "0.15.0",
-  "description": "使用 AI 自动优化文章格式、SEO、GEO，支持 Ollama 本地模型",
+  "description": "使用 AI 按自定义提示词优化文章格式与内容，支持 Ollama 本地模型和 OpenAI 兼容 API",
   "author": "大哥",
   "authorUrl": "",
   "fundingUrl": "",
