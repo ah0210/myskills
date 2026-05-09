@@ -1,8 +1,6 @@
 ---
-name: AI信号筛选
-slug: ai-signal-filter
+name: ai-signal-filter
 description: 从海量AI动态中筛选真正有决策价值的信号，每条必须回答"所以呢"和"该做什么"
-version: "2.0.0"
 ---
 
 # ai-signal-filter
@@ -61,9 +59,10 @@ AI 信号筛选器——专业决策顾问，不是新闻搬运工。
 
 ### Step 3: 执行搜索
 
-按 `references/search-strategy.md` 执行 4 轮搜索，每轮 1-2 个 web_search 查询。
+按 `references/search-strategy.md` 执行搜索（4 轮 web_search + 1 轮 web_fetch 直接抓取）。
 
-语言策略、轮次规划、维度选择均按 `references/search-strategy.md` 中的定义执行。
+- web_search 轮次：每轮 1-2 个查询，语言策略和维度选择按 search-strategy.md 执行
+- web_fetch 轮次：直接抓取 GitHub Trending、Hacker News、中文技术社区等固定源（见 search-strategy.md「直接抓取源」章节）
 
 ### Step 4: 获取详细内容
 

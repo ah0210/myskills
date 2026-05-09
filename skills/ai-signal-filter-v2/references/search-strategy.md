@@ -15,6 +15,34 @@ web_fetch 失败时使用 markdown.new 服务：
 
 通常 web_fetch 可满足需求，境外网站无法访问时启用备选。
 
+### 直接抓取源（不经搜索引擎）
+
+以下来源直接用 web_fetch 抓取，不经过 SearXNG 搜索引擎。这些来源信息密度高、更新稳定，是搜索的重要补充。
+
+| 来源 | URL | 用途 | 语言 |
+|------|-----|------|------|
+| GitHub Trending | `https://github.com/trending` | 新兴开源项目、热门仓库 | 英文 |
+| Hacker News | `https://news.ycombinator.com/` | 技术社区热门讨论 | 英文 |
+| Reddit r/LocalLLaMA | `https://www.reddit.com/r/LocalLLaMA/hot/.json` | 开源模型讨论 | 英文 |
+| Reddit r/MachineLearning | `https://www.reddit.com/r/MachineLearning/hot/.json` | ML 研究动态 | 英文 |
+| X/Twitter AI 讨论 | `https://nitter.net/search?f=tweets&q=AI+agent` | 实时 AI 讨论（nitter 镜像） | 英文 |
+| 36kr AI | `https://www.36kr.com/information/AI/` | 中文 AI 新闻 | 中文 |
+| 机器之心 | `https://www.jiqizhixin.com/` | 中文 AI 深度报道 | 中文 |
+| 量子位 | `https://www.qbitai.com/` | 中文 AI 快讯 | 中文 |
+| InfoQ AI | `https://www.infoq.cn/topic/AI` | 中文技术深度文章 | 中文 |
+| 知乎 AI 热榜 | `https://www.zhihu.com/hot` | 中文社区讨论热点 | 中文 |
+| 掘金 AI | `https://juejin.cn/tag/AI` | 中文开发者社区 | 中文 |
+| Product Hunt | `https://www.producthunt.com/` | 新产品发布 | 英文 |
+| ArXiv AI | `https://arxiv.org/list/cs.AI/recent` | 最新 AI 论文 | 英文 |
+| 自游人 | `https://www.17you.com/` | AI 变现/副业/赚钱思路 | 中文 |
+
+**使用规则**：
+- 每次执行至少抓取 2-3 个直接抓取源
+- 英文源和中文源各至少 1 个
+- Reddit 使用 `.json` 后缀获取结构化数据
+- X/Twitter 通过 nitter 镜像站访问（无需登录）
+- web_fetch 失败时跳过该源，不阻塞流程
+
 ---
 
 ## 语言策略
@@ -117,14 +145,17 @@ web_fetch 失败时使用 markdown.new 服务：
 
 ## 搜索轮次规划
 
-| 轮次 | 目的 | 维度范围 | 语言 |
-|------|------|---------|------|
-| 第1轮 | 宏观动态 | 从 1/3/7/8 中选 | 英文为主 |
-| 第2轮 | 工具生态 | 从 2/5/10/12 中选 | 英文为主 |
-| 第3轮 | 应用变现 | 从 4/6/9 中选 | 中文为主 |
-| 第4轮 | 关注清单+补充 | 从 11 + 关注清单 + 自定义关键词中选 | 中英混合 |
+| 轮次 | 方式 | 目的 | 维度/来源 |
+|------|------|------|----------|
+| 第1轮 | web_search | 宏观动态 | 从 1/3/7/8 中选（英文） |
+| 第2轮 | web_search | 工具生态 | 从 2/5/10/12 中选（英文） |
+| 第3轮 | web_search | 应用变现 | 从 4/6/9 中选（中文） |
+| 第4轮 | web_search | 关注清单 | 11 + 关注清单 + 自定义关键词 |
+| 第5轮 | web_fetch | 直接抓取 | GitHub Trending + Hacker News + 1个中文源 |
 
-每轮 1-2 个 web_search 查询，总计 4-8 个查询。维度选择避免与最近 7 天历史重复。
+- web_search 轮次：每轮 1-2 个查询，总计 4-8 个查询
+- web_fetch 轮次：直接抓取 2-3 个固定源
+- 维度选择避免与最近 7 天历史重复
 
 ---
 
