@@ -1,6 +1,8 @@
 ---
-name: ai-signal-filter
+name: AI信号筛选
+slug: ai-signal-filter
 description: 从海量AI动态中筛选真正有决策价值的信号，每条必须回答"所以呢"和"该做什么"
+version: "2.0.0"
 ---
 
 # ai-signal-filter
